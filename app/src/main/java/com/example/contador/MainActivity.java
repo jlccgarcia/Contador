@@ -22,9 +22,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        contador=0;
         //A partir del video 18
         textoResultado=(TextView)findViewById(R.id.contadorTexto);
+
+        contador=0;
+        //Mostramos el valor inicial
+        textoResultado.setText(""+contador);
 
         //Para que al pulsar el valor de OK en el teclado, el valor
         //que está en el campo de reseteo, suba también como valor de reseteo
@@ -32,6 +35,29 @@ public class MainActivity extends Activity {
         EditText v_reseteo=(EditText)findViewById(R.id.n_reseteo);
         v_reseteo.setOnEditorActionListener(teclado);
 
+    }
+
+    //Video 56 - Persistencia de datos -- Para que se almacene el valor
+    //del contador aunque modifiquemos la orientación del dispositivo
+    public void onSaveInstanceState (Bundle estado) {
+        //Se almacena en el bundle el valor del contador cuando la
+        //app cambie de estado
+        estado.putInt("cuenta", contador);
+
+        //Almacenamos el bundle creado en la clase padre
+        super.onSaveInstanceState(estado);
+    }
+
+    //Video 56 - Persistencia de datos -- Para recuperar la información
+    //almacenada
+    public void onRestoreInstanceState (Bundle estado) {
+        //Recupero la información del bundle de la clase padre
+        super.onRestoreInstanceState(estado);
+        //Recupero el valor deseado
+        contador=estado.getInt("cuenta");
+
+        //Muestro el valor
+        textoResultado.setText(""+contador);
     }
 
     class EventoTeclado implements TextView.OnEditorActionListener{
