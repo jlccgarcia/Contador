@@ -1,7 +1,9 @@
 package com.example.contador;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -37,7 +39,8 @@ public class MainActivity extends Activity {
 
     }
 
-    //Video 56 - Persistencia de datos -- Para que se almacene el valor
+    /*
+    //Video 56 - Persistencia de datos con Bundle -- Para que se almacene el valor
     //del contador aunque modifiquemos la orientación del dispositivo
     public void onSaveInstanceState (Bundle estado) {
         //Se almacena en el bundle el valor del contador cuando la
@@ -48,7 +51,7 @@ public class MainActivity extends Activity {
         super.onSaveInstanceState(estado);
     }
 
-    //Video 56 - Persistencia de datos -- Para recuperar la información
+    //Video 56 - Persistencia de datos con Bundle -- Para recuperar la información
     //almacenada
     public void onRestoreInstanceState (Bundle estado) {
         //Recupero la información del bundle de la clase padre
@@ -59,6 +62,39 @@ public class MainActivity extends Activity {
         //Muestro el valor
         textoResultado.setText(""+contador);
     }
+    */
+
+    //Video 57 - Persistencia de datos con SharedPreference
+    //Se trabaja sobre el método onPause ya que sobre este método se pasará siempre
+    public void onPause() {
+        //Acceso al método de la clase padre
+        super.onPause();
+
+        //Paso 1-Se obtiene el SharedPreference de nuestra aplicación (contexto propio=this)
+        SharedPreferences datos= PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Paso 2-Hacer editable el SharedPreference
+        SharedPreferences.Editor miEditor=datos.edit();
+
+        //Paso 3-Establecer la información a almacenar
+        miEditor.putInt("cuenta", contador);
+
+        //Paso 4-Transferir la inforamación al objeto SharedPreference
+        miEditor.apply();
+    }
+
+    //Recuperar la información --> Se trabaja sobre el método onResumen
+    public void onResume() {
+        //Acceso al método de la clase padre
+        super.onResume();
+
+        //Recuperar la información del SharedPreference
+        SharedPreferences datos= PreferenceManager.getDefaultSharedPreferences(this);
+        contador=datos.getInt("cuenta", 0);
+
+        textoResultado.setText(""+contador);
+    }
+
 
     class EventoTeclado implements TextView.OnEditorActionListener{
         @Override
